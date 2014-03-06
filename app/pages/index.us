@@ -10,17 +10,19 @@
     <script type="text/javascript" src="<%= js %>"></script>
     <script type="text/javascript">
     	$(function() {
-    		window.editor = new window.Aesop.Editor($('textarea'), ['bold', 'p', 'h1'])
+    		window.editor = new window.Aesop.Editor($('textarea'), ['bold', 'p', 'h1', 'underline', 'italic', 'left', 'right', 'center', 'indent','outdent', 'link', 'img', 'ol', 'ul', 'html'])
 
         var tools = window.editor.getTool()
         console.log(tools);
         for(var toolName in tools) {
           var tool = tools[toolName];
-          tool.button.prependTo($('body'))
+          tool.button.appendTo($('#buttongroup'))
         }
        
     	});
     </script>
+    <div id="buttongroup" class="btn-group">
+    </div>
     <textarea></textarea>
   </body>
 </html>

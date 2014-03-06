@@ -10,7 +10,8 @@ module.exports = require(process.env['LINEMAN_MAIN']).config.extend 'files',
 			"vendor/js/underscore.js.js",
 			"vendor/js/bootstrap.min.js",
 			"vendor/js/rangy.js",
-			"vendor/js/underscore.js"
+			"vendor/js/underscore.js",
+			"vendor/js/beautify_html.js"
 
 		]
 		minified: "dist/js/app.js"

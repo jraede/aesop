@@ -1,11 +1,11 @@
 {
   "name": "aesop",
-  "title": "An HTML/JS/CSS app",
+  "title": "Aesop",
   "version": "0.0.1",
   "private": true,
   "author": {
-    "name": "John Doe",
-    "company": "ACME, Inc."
+    "name": "Jason Raede",
+    "company": "Torched Media, LLC"
   },
   "devDependencies": {
     "lineman": "~0.27.1"

@@ -14,7 +14,7 @@ $ ->
 
 
 		it 'should create an empty paragraph element on a keypress event', ->
-			@editor.$keyup
+			@editor.$$keyup
 				which:66
 
 			expect(@editor.getContents()).toEqual('<p></p>')
@@ -25,7 +25,7 @@ $ ->
 			$('textarea').val('asdf')
 			@editor = new window.Aesop.Editor($('textarea'))
 		it 'should wrap existing content in a paragraph on a keypress event', ->
-			@editor.$keyup
+			@editor.$$keyup
 				which:66
 
 			expect(@editor.getContents()).toEqual('<p>asdf</p>')
@@ -126,7 +126,7 @@ $ ->
 
 				@editor.registerTool(tool1)
 
-				@editor.$keypress
+				@editor.$$keypress
 					which:66
 					ctrlKey:true
 					shiftKey:true
