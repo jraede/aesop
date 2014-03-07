@@ -542,8 +542,12 @@ window.Aesop =
 				@type = params.type
 
 			@buttonContent = params.buttonContent
+			@$$watchers = []
 
 			@button = $('<button/>').attr('class', window.Aesop.config.toolbar.buttonClass).html(@buttonContent).click(@action)
+
+		addWatcher: (watcher) ->
+			@$$watchers.push(watcher)
 
 		setActive:(active) ->
 			@active = active
@@ -552,6 +556,9 @@ window.Aesop =
 				@button.addClass(window.Aesop.config.toolbar.buttonActiveClass)
 			else
 				@button.removeClass(window.Aesop.config.toolbar.buttonActiveClass)
+
+			for w in @$$watchers
+				w()
 
 		setDisabled:(disabled) ->
 			@disabled = disabled
@@ -562,6 +569,9 @@ window.Aesop =
 				@button.attr('disabled', 'disabled')
 			else
 				@button.attr('disabled', false)
+
+			for w in @$$watchers
+				w()
 
 
 		
