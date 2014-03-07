@@ -8,7 +8,9 @@
     "company": "Torched Media, LLC"
   },
   "devDependencies": {
-    "lineman": "~0.27.1"
+    "lineman": "~0.27.1",
+    "grunt": "^0.4.2",
+    "grunt-contrib-copy": "^0.5.0"
   },
   "scripts": {
     "start": "lineman run",

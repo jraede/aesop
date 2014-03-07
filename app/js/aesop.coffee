@@ -29,6 +29,7 @@ window.Aesop =
 				@document.find('body').html(@originalValue)
 
 			@$$tools = {}
+			@$$watchers = []
 			@$$keyListeners = []
 			@$$styleWatchers = {}
 			@$$allStyleWatchers = []
@@ -43,6 +44,8 @@ window.Aesop =
 				@$$updateWatchers()
 
 			@element.hide()
+			@element.change =>
+				@$$updateContentFromElement()
 			# Tell it to style with html tags
 			#@$execCommand('styleWithCSS', null, false)
 
@@ -60,6 +63,11 @@ window.Aesop =
 		###
 		PUBLIC API
 		###
+
+
+		# Just add a function that runs every time $$updateWatchers() is called
+		addWatcher: (watcher) ->
+			@$$watchers.push(watcher)
 
 		###
 		Listen for a key combination
@@ -215,13 +223,14 @@ window.Aesop =
 						w.setActive(true)
 
 
+			for watcher in @$$watchers
+				watcher()
 			# Now finally update the element with the new content
 			@element.html(window.html_beautify(@getContents()))
 
 
 
 		$$setCaretToNode: (node) ->
-			console.log 'Setting caret to node:', node
 			if @$getSelection()? and @document[0].createRange?
 				range = @document[0].createRange()
 				range.selectNodeContents(node)
@@ -457,14 +466,13 @@ window.Aesop =
 			# @document.on 'keydown', (e) =>
 			# 	@$keydown(e)
 
-
+		$$updateContentFromElement: ->
+			val = @element.val()
+			@document.find('body').html(val)
 		$$ensureParagraphWrapper: (evt) ->
-			console.log 'Ensuring paragraph', @$getCurrentElement()[0].tagName
 			if !@getContents() or @$getCurrentElement()[0].tagName is 'BODY'
-				console.log 'Should be inserting P'
 				@$insertBlock('P')
 			else if @$getCurrentElement()[0].tagName is 'DIV' or !@$getCurrentBlock()
-				console.log 'Should be inserting P'
 				@$insertBlock('P')
 		$$keyup: (evt) ->
 			# First of all check if we need to add a <p> tag

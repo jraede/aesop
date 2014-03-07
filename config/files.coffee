@@ -14,8 +14,9 @@ module.exports = require(process.env['LINEMAN_MAIN']).config.extend 'files',
 			"vendor/js/beautify_html.js"
 
 		]
-		minified: "dist/js/app.js"
-		minifiedWebRelative: "js/app.js"
+		minified: "dist/js/aesop.min.js"
+		minifiedWebRelative: "js/aesop.min.js"
+
 
 	# concat:
 	# 	js:
