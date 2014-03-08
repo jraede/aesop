@@ -21,19 +21,7 @@ module.exports = require(process.env['LINEMAN_MAIN']).config.extend 'files',
 	# concat:
 	# 	js:
 	# 		src: ["<%= files.js.vendor %>", "<%= files.ngtemplates.dest %>", "<%= files.coffee.generated %>", "<%= files.js.app %>"]
-	css:
-		vendor: "vendor/css/**/*.css"
-		app: "app/css/main.css"
-		concatenated: "generated/css/app.css"
-		minified: "dist/css/app.css"
-		minifiedWebRelative: "css/app.css"
-	less:
-		app: "app/css/main.less"
-		vendor: [
-			"vendor/css/**/*.less"
-		]
-		generatedApp: "generated/css/app.less.css"
-		generatedVendor: "generated/css/vendor.less.css"
+
 
 
 	

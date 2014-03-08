@@ -4,5 +4,7 @@ window.Aesop.registerToolType 'ul',
 		propagate:true
 	type:'list'
 	buttonContent:'ul'
-	action:->	
+	action:->
+		if @active
+			@setActive(false)
 		@editor.$execCommand('insertUnorderedList')

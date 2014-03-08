@@ -3,7 +3,7 @@
   <head>
     <title><%= pkg.name %></title>
 
-    <link rel="stylesheet" type="text/css" href="<%= css %>" media="all" />
+
   </head>
   <body>
     <p>test</p>
@@ -11,7 +11,7 @@
     <script type="text/javascript">
     	$(function() {
     		window.editor = new window.Aesop.Editor($('textarea'), ['bold', 'p', 'h1', 'underline', 'italic', 'left', 'right', 'center', 'indent','outdent', 'link', 'img', 'ol', 'ul', 'html'])
-
+      window.editor.addStylesheet('/css/app.css')
         var tools = window.editor.getTool()
         console.log(tools);
         for(var toolName in tools) {

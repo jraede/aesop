@@ -4,5 +4,7 @@ window.Aesop.registerToolType 'ol',
 		propagate:true
 	type:'list'
 	buttonContent:'ol'
-	action:->	
+	action:->
+		if @active
+			@setActive(false)
 		@editor.$execCommand('insertOrderedList')

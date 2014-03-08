@@ -57,6 +57,10 @@ window.Aesop =
 						@registerTool(t)
 
 
+		destroy: ->
+			# Remove the iframe
+			@iframe.remove()
+			
 		blockTags:['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'PRE', 'BLOCKQUOTE']
 
 
@@ -64,6 +68,10 @@ window.Aesop =
 		PUBLIC API
 		###
 
+		addStylesheet:(url) ->
+
+			link = $('<link/>').attr('rel', 'stylesheet').attr('type', 'text/css').attr('href', url)
+			@document.find('head').append(link)
 
 		# Just add a function that runs every time $$updateWatchers() is called
 		addWatcher: (watcher) ->
@@ -187,13 +195,17 @@ window.Aesop =
 
 			el = @$getCurrentElement()
 
+			
+			
 			# Update all to inactive
-			for name,tool of @$$tools
-				tool.setActive(false)
+			# for name,tool of @$$tools
+			# 	tool.setActive(false)
 			# TAGS
 			
 			# Check non propagated
 			tagName = el[0].tagName
+
+
 
 			@$$updateTagWatchers(tagName, 'non')
 
@@ -212,6 +224,8 @@ window.Aesop =
 
 			# STYLES
 
+			allStyleWatchers = @$$allStyleWatchers
+			matched = []
 			for prop,vals of @$$styleWatchers
 				css = el.css(prop)
 				# Some browsers have more shit than we need. For now just use the first block (separated by space)
@@ -219,14 +233,26 @@ window.Aesop =
 					continue
 				css = css.toString().split(' ')[0]
 				if vals[css]?
+					
 					for w in vals[css]
+						matched.push(w)
 						w.setActive(true)
+
+			# Set unmatched to inactive
+			for w in allStyleWatchers
+				if matched.indexOf(w) < 0
+					w.setActive(false)
 
 
 			for watcher in @$$watchers
 				watcher()
 			# Now finally update the element with the new content
-			@element.html(window.html_beautify(@getContents()))
+			
+			contents = @getContents()
+			if window.html_beautify?
+				contents = window.html_beautify(contents)
+
+			@element.html(contents)
 
 
 
@@ -304,6 +330,10 @@ window.Aesop =
 		@see https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla
 		###
 		$execCommand: (command, defaultUI = false, arg=null) ->
+			el = @$getCurrentElement(false)
+			
+			if !el
+				return false
 			@document[0].execCommand(command, defaultUI, arg)
 			console.log 'Ensuring paragraph'
 			@$$ensureParagraphWrapper()
@@ -322,9 +352,9 @@ window.Aesop =
 		@todo See if we can use native 'formatBlock'
 		###
 		$insertBlock: (blockType) ->
-			el = @$getCurrentElement()
-			
-
+			el = @$getCurrentElement(false)
+			if !el
+				return false
 			tag = el[0].tagName
 			
 			console.log 'Inserting block:', blockType, tag
@@ -415,8 +445,8 @@ window.Aesop =
 
 		@return jQuery Object
 		###
-		$getCurrentElement: ->
-			$(@document).focus()
+		$getCurrentElement: (returnBodyOnNull = true) ->
+			#$(@document).focus()
 			sel = @$getSelection()
 			if sel.anchorNode
 
@@ -425,7 +455,9 @@ window.Aesop =
 					return $(sel.anchorNode.parentNode)
 				return $(sel.anchorNode)
 			else
-				return @document.find('body')
+				if returnBodyOnNull
+					return @document.find('body')
+				return false
 
 		###
 		Gets the current block element.
@@ -469,8 +501,20 @@ window.Aesop =
 		$$updateContentFromElement: ->
 			val = @element.val()
 			@document.find('body').html(val)
+
+		$$lastEnsureParagraphContents:''
 		$$ensureParagraphWrapper: (evt) ->
-			if !@getContents() or @$getCurrentElement()[0].tagName is 'BODY'
+			if @getContents() and @getContents() is @$$lastEnsureParagraphContents
+				return
+
+			if @getContents() is '<p></p>' or @getContents() is '<p><br/></p>'
+				return
+
+			console.log 'Ensuring paragraph wrapper with contents:', @getContents()
+
+			@$$lastEnsureParagraphContents = @getContents()
+			if !@getContents() or (@$getCurrentElement()[0].tagName is 'BODY' and !@$getCurrentElement().find('p').length)
+				console.log 'First conditional'
 				@$insertBlock('P')
 			else if @$getCurrentElement()[0].tagName is 'DIV' or !@$getCurrentBlock()
 				@$insertBlock('P')
